@@ -20,7 +20,8 @@ own.
 
 ## Requirements
 
-- FINAL FANTASY V Pixel Remaster (Steam)
+- FINAL FANTASY V Pixel Remaster (Steam) — tested on game version **1.2.0**
+  (Steam build `20265087`)
 - BepInEx 6 IL2CPP (`6.0.0-be.697` at the time of writing) set up per
   [the usual Pixel Remaster modding guide](https://steamcommunity.com/sharedfiles/filedetails/?id=2788533275)
   - Magicite is not required by this plugin, but it works fine alongside it
