@@ -20,6 +20,9 @@ internal static class GameState
         [331] = "Wind Crystal"
     };
 
+    private static readonly HashSet<int> SessionLearnedBlue = new();
+    private static readonly object SessionLearnedLock = new();
+
     public static BlueMagicProvider GetBlueMagicProvider()
     {
         try
@@ -137,7 +140,55 @@ internal static class GameState
         }
 
         ApplyBlueAliasMap(learned);
+
+        lock (SessionLearnedLock)
+        {
+            foreach (int id in learned)
+            {
+                if (BlueMagicCatalog.IsBlueMagicId(id))
+                    SessionLearnedBlue.Add(id);
+            }
+
+            learned.UnionWith(SessionLearnedBlue);
+        }
+
         return learned;
+    }
+
+    /// <summary>
+    /// Forgets what was learned this session. Called when a save is loaded or a
+    /// new game starts, so an older save cannot stay suppressed by a spell that
+    /// was learned in a save the player left behind.
+    /// </summary>
+    public static void ResetSessionLearned()
+    {
+        lock (SessionLearnedLock)
+        {
+            SessionLearnedBlue.Clear();
+        }
+    }
+
+    /// <summary>
+    /// Re-reads the live save state and remembers any blue spell learned during
+    /// the fight. Called at battle end; the next battle start also re-reads the
+    /// live lists, so learned spells do not come back.
+    /// </summary>
+    public static void RefreshSessionLearned()
+    {
+        try
+        {
+            var learned = GetLearnedAbilityIds();
+            if (BlueMageHelperPlugin.Verbose.Value)
+            {
+                var blue = learned.Where(BlueMagicCatalog.IsBlueMagicId).OrderBy(x => x);
+                BlueMageHelperPlugin.LogSource.LogInfo(
+                    $"[BlueMagic] session learned blue ids=[{string.Join(", ", blue)}]");
+            }
+        }
+        catch (Exception e)
+        {
+            BlueMageHelperPlugin.LogSource.LogWarning($"Could not refresh learned blue magic: {e.Message}");
+        }
     }
 
     /// <summary>

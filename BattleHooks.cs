@@ -1,6 +1,7 @@
 using System;
 using HarmonyLib;
 using Last.Battle;
+using Last.Management;
 
 namespace FFVBlueMageHelper;
 
@@ -41,6 +42,24 @@ internal static class TitleScreenPatch
     }
 }
 
+[HarmonyPatch(typeof(UserDataManager), nameof(UserDataManager.FromJsonAsync))]
+internal static class UserDataLoadPatch
+{
+    private static void Postfix()
+    {
+        GameState.ResetSessionLearned();
+    }
+}
+
+[HarmonyPatch(typeof(UserDataManager), nameof(UserDataManager.Initialize))]
+internal static class UserDataInitializePatch
+{
+    private static void Postfix()
+    {
+        GameState.ResetSessionLearned();
+    }
+}
+
 [HarmonyPatch(typeof(BattleController), nameof(BattleController.StartInBattle))]
 internal static class BattleStartPatch
 {
@@ -57,6 +76,7 @@ internal static class BattleExitPatch
     {
         try
         {
+            GameState.RefreshSessionLearned();
             Banner.Hide();
         }
         catch (Exception e)
