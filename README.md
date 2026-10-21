@@ -111,6 +111,10 @@ The config file is created at
   ability aliases (for example `400` for Goblin Punch), so the embedded alias
   table maps those back to the blue spell IDs (`205`-`234`). A spell counts as
   learned if any recruited character knows it.
+- Spells learned during play are remembered for the rest of the session, and the
+  learned state is re-read when a battle ends. Loading a save or starting a new
+  game clears that session cache, so an older save is never suppressed by a spell
+  learned in a different save.
 - If at least one listed spell is still unknown, the banner is built on a small
   screen-space overlay canvas.
 
