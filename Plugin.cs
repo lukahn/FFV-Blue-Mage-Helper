@@ -12,7 +12,7 @@ namespace FFVBlueMageHelper;
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
 public sealed class BlueMageHelperPlugin : BasePlugin
 {
-    public const string PluginGuid = "com.lukahn.ff5.bluemagehelper";
+    public const string PluginGuid = "com.lukahn.ffv.bluemagehelper";
     public const string PluginName = "FFV Blue Mage Helper";
     public const string PluginVersion = "1.0.0";
 

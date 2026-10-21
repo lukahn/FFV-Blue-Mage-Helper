@@ -91,7 +91,7 @@ assemblies match.
 ## Configuration
 
 The config file is created at
-`BepInEx\config\com.lukahn.ff5.bluemagehelper.cfg`.
+`BepInEx\config\com.lukahn.ffv.bluemagehelper.cfg`.
 
 | Setting | Default | Description |
 | --- | --- | --- |
@@ -175,4 +175,4 @@ JSON and rebuild:
 ## Uninstall
 
 Delete `BepInEx/plugins/FFVBlueMageHelper.dll` (and optionally
-`BepInEx/config/com.lukahn.ff5.bluemagehelper.cfg`).
+`BepInEx/config/com.lukahn.ffv.bluemagehelper.cfg`).
