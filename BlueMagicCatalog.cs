@@ -21,10 +21,18 @@ internal sealed class MonsterInfo
     public string Msg { get; set; }
 }
 
+internal sealed class AliasInfo
+{
+    public int AbilityId { get; set; }
+    public int ContentId { get; set; }
+    public int SpellId { get; set; }
+}
+
 internal sealed class BlueMagicFile
 {
     public List<SpellInfo> Spells { get; set; }
     public List<MonsterInfo> Monsters { get; set; }
+    public List<AliasInfo> Aliases { get; set; }
 }
 
 /// <summary>
@@ -36,6 +44,8 @@ internal static class BlueMagicCatalog
     private static readonly Dictionary<int, SpellInfo> SpellsById = new();
     private static readonly Dictionary<int, List<SpellInfo>> SpellsByMonster = new();
     private static readonly Dictionary<int, MonsterInfo> MonstersById = new();
+    private static readonly Dictionary<int, int> SpellByAbilityAlias = new();
+    private static readonly Dictionary<int, int> SpellByContentId = new();
 
     static BlueMagicCatalog()
     {
@@ -61,6 +71,18 @@ internal static class BlueMagicCatalog
     public static bool IsBlueMagicId(int abilityId)
     {
         return SpellsById.ContainsKey(abilityId);
+    }
+
+    public static int AbilityAliasCount => SpellByAbilityAlias.Count;
+
+    public static bool TryGetSpellByAbilityAlias(int abilityId, out int spellId)
+    {
+        return SpellByAbilityAlias.TryGetValue(abilityId, out spellId);
+    }
+
+    public static bool TryGetSpellByContentId(int contentId, out int spellId)
+    {
+        return SpellByContentId.TryGetValue(contentId, out spellId);
     }
 
     public static string GetMonsterName(int monsterId, string fallback = null)
@@ -117,8 +139,19 @@ internal static class BlueMagicCatalog
                 MonstersById[monster.Id] = monster;
         }
 
+        if (data.Aliases != null)
+        {
+            foreach (var alias in data.Aliases)
+            {
+                if (alias.AbilityId > 0)
+                    SpellByAbilityAlias[alias.AbilityId] = alias.SpellId;
+                if (alias.ContentId > 0)
+                    SpellByContentId[alias.ContentId] = alias.SpellId;
+            }
+        }
+
         BlueMageHelperPlugin.LogSource?.LogInfo(
             $"Loaded {SpellsById.Count} blue magic spells covering " +
-            $"{SpellsByMonster.Count} monsters.");
+            $"{SpellsByMonster.Count} monsters and {SpellByAbilityAlias.Count} ability aliases.");
     }
 }

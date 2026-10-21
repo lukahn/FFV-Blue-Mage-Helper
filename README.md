@@ -106,9 +106,11 @@ The config file is created at
 - The monster party for the battle is read from the game's master data.
 - Each monster ID is matched against the Blue Magic guide data embedded in
   `data/blue_magic.json`.
-- Learned spells are read from the party's `LearningAbilitys` (blue magic is
-  stored as ability IDs 205-234 in the Pixel Remaster). A spell counts as learned
-  if any recruited character knows it.
+- Learned spells are read from the party's `LearningAbilitys`, owned abilities and
+  the global `learnedAbilityList`. The game stores learned blue magic as enemy
+  ability aliases (for example `400` for Goblin Punch), so the embedded alias
+  table maps those back to the blue spell IDs (`205`-`234`). A spell counts as
+  learned if any recruited character knows it.
 - If at least one listed spell is still unknown, the banner is built on a small
   screen-space overlay canvas.
 
